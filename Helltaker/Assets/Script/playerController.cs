@@ -37,6 +37,7 @@ public class playerController : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.D))
             {
                 RaycastHit2D hit = Physics2D.Raycast(transform.position + new Vector3(1f, 0f, 0f), transform.right, 0.1f);
+                var interactable = hit.collider.GetComponent<InteractableObject>();
                 if (hit.collider == null)
                 {
                     spriteRenderer.flipX = true;
@@ -51,6 +52,7 @@ public class playerController : MonoBehaviour
                     VFXAttack.ChangeLocalPos(new Vector3(1f, 0f, -1f));
                     VFXAttack.ChangeRotation(0f);
                 }
+                //else if (hit.collider == PushableController) 
             }
             if (Input.GetKeyDown(KeyCode.A))
             {
@@ -158,4 +160,8 @@ public class playerController : MonoBehaviour
     {
         VFXAttack.SetAnimatorAttack();
     }
+    /*IEnumerator Push()
+    {
+
+    }*/
 }
