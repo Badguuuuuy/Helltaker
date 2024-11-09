@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 168367514}
   - component: {fileID: 168367513}
   m_Layer: 0
-  m_Name: VFX01
+  m_Name: Attack_VFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -604,7 +604,7 @@ GameObject:
   m_Component:
   - component: {fileID: 597508997}
   - component: {fileID: 597508996}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: bg2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1296,6 +1296,8 @@ GameObject:
   - component: {fileID: 1512889032}
   - component: {fileID: 1512889031}
   - component: {fileID: 1512889034}
+  - component: {fileID: 1512889036}
+  - component: {fileID: 1512889035}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1409,7 +1411,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   VFXanimator: {fileID: 0}
+--- !u!114 &1512889035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1512889030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35cc9c93976585a4f83ae0e811ffd7fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   VFXAttack: {fileID: 168367513}
+--- !u!114 &1512889036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1512889030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1912769d4480d1f45bc98c5498007e74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1940076008
 GameObject:
   m_ObjectHideFlags: 0
@@ -1593,7 +1619,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2119826363}
   - component: {fileID: 2119826364}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: bg3
   m_TagString: Untagged
   m_Icon: {fileID: 0}

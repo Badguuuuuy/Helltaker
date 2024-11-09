@@ -14,5 +14,5 @@ public interface InteractableObject
         
     }*/
 
-    void OnHit();
+    
 }
