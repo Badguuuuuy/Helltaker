@@ -39,21 +39,21 @@ public class PlayerMovementController : MonoBehaviour
                     animator.SetTrigger("Move1");
                     StartCoroutine(Move(1f, true));     //상하좌우 방향 +-, 수직여부
                 }
-                if (direction == Vector3.down)
+                else if (direction == Vector3.down)
                 {
-                    animator.SetTrigger("Move");   
+                    animator.SetTrigger("Move");
                     StartCoroutine(Move(-1f, true));
                 }
-                if (direction == Vector3.left)
+                else if (direction == Vector3.left)
                 {
                     spriteRenderer.flipX = false;
-                    animator.SetTrigger("Move");   
+                    animator.SetTrigger("Move");
                     StartCoroutine(Move(-1f, false));
                 }
-                if (direction == Vector3.right)
+                else if (direction == Vector3.right)
                 {
                     spriteRenderer.flipX = true;
-                    animator.SetTrigger("Move");   
+                    animator.SetTrigger("Move");
                     StartCoroutine(Move(1f, false));
                 }
                 // 이동 로직 추가
@@ -63,27 +63,45 @@ public class PlayerMovementController : MonoBehaviour
                 OnAttack?.Invoke(direction);    //공격 방향 이벤트 전달
                 if (direction == Vector3.up)
                 {
-                    animator.SetTrigger("Attack");   
                     StartCoroutine(Attack(hit.collider));
                 }
-                if (direction == Vector3.down)
+                else if (direction == Vector3.down)
                 {
-                    animator.SetTrigger("Attack");   
                     StartCoroutine(Attack(hit.collider));
                 }
-                if (direction == Vector3.left)
+                else if (direction == Vector3.left)
                 {
                     spriteRenderer.flipX = false;
-                    animator.SetTrigger("Attack");   
                     StartCoroutine(Attack(hit.collider));
                 }
-                if (direction == Vector3.right)
+                else if (direction == Vector3.right)
                 {
                     spriteRenderer.flipX = true;
-                    animator.SetTrigger("Attack");   
                     StartCoroutine(Attack(hit.collider));
                 }
                 // 공격 및 VFX 로직 추가
+            }
+            else if (hit.collider.CompareTag("Pushable"))
+            {
+                if(direction == Vector3.up)
+                {
+                    //animator
+                    StartCoroutine(Push(hit.collider, direction));
+                }
+                else if (direction == Vector3.down)
+                {
+                    StartCoroutine(Push(hit.collider, direction));
+                }
+                else if (direction == Vector3.left)
+                {
+                    spriteRenderer.flipX = false;
+                    StartCoroutine(Push(hit.collider, direction));
+                }
+                else if (direction == Vector3.right)
+                {
+                    spriteRenderer.flipX = true;
+                    StartCoroutine(Push(hit.collider, direction));
+                }
             }
         }
     }
@@ -131,6 +149,12 @@ public class PlayerMovementController : MonoBehaviour
         isAttack = true;
         animator.SetTrigger("Attack");
 
+        yield return null;
+    }
+    IEnumerator Push(Collider2D col, Vector3 dir)
+    {
+        animator.SetTrigger("Kick");
+        col.GetComponent<PushableObject>().Pushed(dir);
         yield return null;
     }
     public void OffAttack()

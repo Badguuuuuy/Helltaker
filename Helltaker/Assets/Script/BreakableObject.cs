@@ -1,26 +1,30 @@
 using System.Collections;
 using UnityEngine;
 
-public class AliveState : IEnemyState<BreakableObject>
+namespace BreakableStates
 {
-    public void EnterState(BreakableObject obstacle) { }
-    public void UpdateState(BreakableObject obstacle) { }
-}
-public class DeadState : IEnemyState<BreakableObject>
-{
-    public void EnterState(BreakableObject obstacle) {
-        obstacle.animator.SetTrigger("Hit"); // 죽음 애니메이션 트리거
-        //enemy.enabled = false; // 추가적인 처리가 필요할 경우
-        obstacle.boxCollider.enabled = false;
-        obstacle.StartFadeOut();
+    public class AliveState : IEnemyState<BreakableObject>
+    {
+        public void EnterState(BreakableObject obstacle) { }
+        public void UpdateState(BreakableObject obstacle) { }
     }
-    public void UpdateState(BreakableObject obstacle) { }
+    public class DeadState : IEnemyState<BreakableObject>
+    {
+        public void EnterState(BreakableObject obstacle)
+        {
+            obstacle.animator.SetTrigger("Hit"); // 죽음 애니메이션 트리거
+            //enemy.enabled = false; // 추가적인 처리가 필요할 경우
+            obstacle.boxCollider.enabled = false;
+            obstacle.StartFadeOut();
+        }
+        public void UpdateState(BreakableObject obstacle) { }
+    }
 }
 
 public class BreakableObject : MonoBehaviour
 {
-    public static readonly IEnemyState<BreakableObject> aliveState = new AliveState();
-    public static readonly IEnemyState<BreakableObject> deadState = new DeadState();
+    public static readonly IEnemyState<BreakableObject> aliveState = new BreakableStates.AliveState();
+    public static readonly IEnemyState<BreakableObject> deadState = new BreakableStates.DeadState();
 
     public IEnemyState<BreakableObject> currentState;
     public Animator animator;
@@ -40,7 +44,6 @@ public class BreakableObject : MonoBehaviour
     {
         currentState.UpdateState(this);
     }
-
     public void TakeDamage()
     {
         TransitionToState(deadState); //피격시 Dead 상태로 전환
