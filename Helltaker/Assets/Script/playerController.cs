@@ -26,10 +26,12 @@ public class PlayerController : MonoBehaviour
     private void OnEnable()
     {
         playerMovementController.OnAttack += HandleAttackEvent;
+        playerMovementController.OnPush += HandleKickEvent;
     }
     private void OnDisable()
     {
         playerMovementController.OnAttack -= HandleAttackEvent;
+        playerMovementController.OnPush -= HandleKickEvent;
     }
 
     // Update is called once per frame
@@ -37,6 +39,7 @@ public class PlayerController : MonoBehaviour
     {
             if (Input.GetKeyDown(KeyCode.W))
             {
+            Debug.Log("플레이어컨트롤러");
                 playerMovementController.MoveOrAttack(Vector3.up);
             }
             else if (Input.GetKeyDown(KeyCode.A))
@@ -54,6 +57,10 @@ public class PlayerController : MonoBehaviour
     }
     private void HandleAttackEvent(Vector3 dir)
     {
-        playerVFXController.ChangeVFXDir(dir);
+        playerVFXController.ChangeAttackVFXDir(dir);
+    }
+    private void HandleKickEvent(Vector3 dir)
+    {
+        playerVFXController.ChangeKickVFXDir(dir);
     }
 }

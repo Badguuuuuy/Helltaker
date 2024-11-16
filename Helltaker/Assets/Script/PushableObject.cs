@@ -29,11 +29,14 @@ public class PushableObject : MonoBehaviour
     bool isPushed = false;
 
     const float Duration = 0.065f;
+    const float RayDistance = 0.1f;
 
     public IEnemyState<PushableObject> currentState;
     public Animator animator;
     public BoxCollider2D boxCollider;
     public SpriteRenderer spriteRenderer;
+
+    LayerMask raycastLayerMask;
 
     private void Awake()
     {
@@ -45,6 +48,7 @@ public class PushableObject : MonoBehaviour
     void Start()
     {
         currentState = aliveState;
+        raycastLayerMask = ~LayerMask.GetMask("Ignore Raycast");
     }
     // Update is called once per frame
     void Update()
@@ -53,7 +57,16 @@ public class PushableObject : MonoBehaviour
     }
     public void Pushed(Vector3 dir)
     {
-        StartCoroutine(MovedByPush(dir));
+        RaycastHit2D hit = Physics2D.Raycast(transform.position + dir, dir, RayDistance, raycastLayerMask);
+        if (hit.collider != null && hit.collider.tag == "Boundary")
+        {
+            return;
+        }
+        else 
+        {
+            StartCoroutine(MovedByPush(dir));
+        }
+        
     }
     private IEnumerator MovedByPush(Vector3 dir)
     {

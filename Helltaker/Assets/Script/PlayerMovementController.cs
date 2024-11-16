@@ -12,10 +12,13 @@ public class PlayerMovementController : MonoBehaviour
 
     public delegate void AttackEventHandler(Vector3 attackDirection);
     public event AttackEventHandler OnAttack;
+    public event AttackEventHandler OnPush;
 
     LayerMask raycastLayerMask;
     SpriteRenderer spriteRenderer;
     Animator animator;
+
+    int cnt = 0;
 
     private void Awake()
     {
@@ -26,9 +29,14 @@ public class PlayerMovementController : MonoBehaviour
     {
         raycastLayerMask = ~LayerMask.GetMask("Ignore Raycast");
     }
+    private void Update()
+    {
+        Debug.Log("isMove: " + isMove);
+        Debug.Log("isAttack: " + isAttack);
+    }
     public void MoveOrAttack(Vector3 direction)
     {
-        if (!isMove && !isAttack)
+        if (!isAttack)
         {
             RaycastHit2D hit = Physics2D.Raycast(transform.position + direction, direction, RayDistance, raycastLayerMask);
 
@@ -36,6 +44,7 @@ public class PlayerMovementController : MonoBehaviour
             {
                 if (direction == Vector3.up)
                 {
+                    Debug.Log("콜라이더 널");
                     animator.SetTrigger("Move1");
                     StartCoroutine(Move(1f, true));     //상하좌우 방향 +-, 수직여부
                 }
@@ -83,6 +92,7 @@ public class PlayerMovementController : MonoBehaviour
             }
             else if (hit.collider.CompareTag("Pushable"))
             {
+                OnPush?.Invoke(direction);      //푸쉬 방향 이벤트 전달
                 if(direction == Vector3.up)
                 {
                     //animator
@@ -107,7 +117,9 @@ public class PlayerMovementController : MonoBehaviour
     }
     IEnumerator Move(float dir, bool isVert)
     {
-        isMove = true;
+        cnt++;
+        Debug.Log("move코루틴호출" + cnt);
+        isAttack = true;
         Vector2 parentPos = transform.position;
         Vector2 targetPos = transform.position;
 
@@ -140,12 +152,12 @@ public class PlayerMovementController : MonoBehaviour
             yield return null;
         }
         transform.position = targetPos;
-        isMove = false;
+        //isAttack = false;
+        Debug.Log("저 거짓임" + cnt);
     }
     IEnumerator Attack(Collider2D col)
     {
-        BreakableObject obstacle = col.GetComponent<BreakableObject>();
-        obstacle.TakeDamage();
+        col.GetComponent<BreakableObject>().TakeDamage();
         isAttack = true;
         animator.SetTrigger("Attack");
 
@@ -153,12 +165,14 @@ public class PlayerMovementController : MonoBehaviour
     }
     IEnumerator Push(Collider2D col, Vector3 dir)
     {
-        animator.SetTrigger("Kick");
         col.GetComponent<PushableObject>().Pushed(dir);
+        isAttack = true;
+        animator.SetTrigger("Kick");
         yield return null;
     }
     public void OffAttack()
     {
+        Debug.Log("앙기모띠");
         isAttack = false;
     }
 }
