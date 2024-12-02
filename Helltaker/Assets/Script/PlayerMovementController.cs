@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,7 @@ public class PlayerMovementController : MonoBehaviour
     public delegate void AttackEventHandler(Vector3 attackDirection);
     public event AttackEventHandler OnAttack;
     public event AttackEventHandler OnPush;
+    public event Action OnValueChanged;
 
     LayerMask raycastLayerMask;
     SpriteRenderer spriteRenderer;
@@ -31,9 +33,9 @@ public class PlayerMovementController : MonoBehaviour
     }
     private void Update()
     {
-        Debug.Log("isMove: " + isMove);
-        Debug.Log("isAttack: " + isAttack);
+
     }
+
     public void MoveOrAttack(Vector3 direction)
     {
         if (!isAttack)
@@ -44,7 +46,6 @@ public class PlayerMovementController : MonoBehaviour
             {
                 if (direction == Vector3.up)
                 {
-                    Debug.Log("콜라이더 널");
                     animator.SetTrigger("Move1");
                     StartCoroutine(Move(1f, true));     //상하좌우 방향 +-, 수직여부
                 }
@@ -55,12 +56,20 @@ public class PlayerMovementController : MonoBehaviour
                 }
                 else if (direction == Vector3.left)
                 {
+                    if (spriteRenderer.flipX)
+                    {
+                        OnValueChanged?.Invoke();
+                    }
                     spriteRenderer.flipX = false;
                     animator.SetTrigger("Move");
                     StartCoroutine(Move(-1f, false));
                 }
                 else if (direction == Vector3.right)
                 {
+                    if (!spriteRenderer.flipX)
+                    {
+                        OnValueChanged?.Invoke();
+                    }
                     spriteRenderer.flipX = true;
                     animator.SetTrigger("Move");
                     StartCoroutine(Move(1f, false));
@@ -80,11 +89,19 @@ public class PlayerMovementController : MonoBehaviour
                 }
                 else if (direction == Vector3.left)
                 {
+                    if (spriteRenderer.flipX)
+                    {
+                        OnValueChanged?.Invoke();
+                    }
                     spriteRenderer.flipX = false;
                     StartCoroutine(Attack(hit.collider));
                 }
                 else if (direction == Vector3.right)
                 {
+                    if (!spriteRenderer.flipX)
+                    {
+                        OnValueChanged?.Invoke();
+                    }
                     spriteRenderer.flipX = true;
                     StartCoroutine(Attack(hit.collider));
                 }
@@ -104,11 +121,19 @@ public class PlayerMovementController : MonoBehaviour
                 }
                 else if (direction == Vector3.left)
                 {
+                    if (spriteRenderer.flipX)
+                    {
+                        OnValueChanged?.Invoke();
+                    }
                     spriteRenderer.flipX = false;
                     StartCoroutine(Push(hit.collider, direction));
                 }
                 else if (direction == Vector3.right)
                 {
+                    if (!spriteRenderer.flipX)
+                    {
+                        OnValueChanged?.Invoke();
+                    }
                     spriteRenderer.flipX = true;
                     StartCoroutine(Push(hit.collider, direction));
                 }
@@ -117,8 +142,6 @@ public class PlayerMovementController : MonoBehaviour
     }
     IEnumerator Move(float dir, bool isVert)
     {
-        cnt++;
-        Debug.Log("move코루틴호출" + cnt);
         isAttack = true;
         Vector2 parentPos = transform.position;
         Vector2 targetPos = transform.position;
@@ -153,7 +176,6 @@ public class PlayerMovementController : MonoBehaviour
         }
         transform.position = targetPos;
         //isAttack = false;
-        Debug.Log("저 거짓임" + cnt);
     }
     IEnumerator Attack(Collider2D col)
     {
@@ -172,7 +194,6 @@ public class PlayerMovementController : MonoBehaviour
     }
     public void OffAttack()
     {
-        Debug.Log("앙기모띠");
         isAttack = false;
     }
 }

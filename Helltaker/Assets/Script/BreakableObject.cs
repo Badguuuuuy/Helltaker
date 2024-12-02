@@ -64,6 +64,7 @@ public class BreakableObject : MonoBehaviour
         }
         color.a = 0f;
         yield return spriteRenderer.color = color;
+        gameObject.SetActive(false);
     }
     public void TransitionToState(IEnemyState<BreakableObject> newState)
     {

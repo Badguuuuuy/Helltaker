@@ -58,7 +58,7 @@ public class PushableObject : MonoBehaviour
     public void Pushed(Vector3 dir)
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position + dir, dir, RayDistance, raycastLayerMask);
-        if (hit.collider != null && hit.collider.tag == "Boundary")
+        if (hit.collider != null && (hit.collider.tag == "Boundary" || hit.collider.tag == "Pushable" || hit.collider.tag == "Obstacle"))
         {
             return;
         }
